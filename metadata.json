@@ -1,6 +1,6 @@
 {
-  "name": "Qeloma Cover Studio",
-  "description": "An interactive studio for designing, previewing, and downloading high-res professional LinkedIn cover banners for any profession, with safe-zone guides and an AI copywriting assistant. By Qeloma.",
+  "name": "Qeloma Cover & Drive Studio",
+  "description": "An interactive studio for designing, previewing, exporting, and saving high-res professional LinkedIn cover banners with Google Drive integration and AI copywriter. By Qeloma.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

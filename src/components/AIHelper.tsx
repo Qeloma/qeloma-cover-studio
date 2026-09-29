@@ -118,13 +118,15 @@ export default function AIHelper({ config, onChangeConfig }: AIHelperProps) {
 
   return (
     <div className="bg-surface border border-line rounded-xl p-6 space-y-6 transition-colors" id="ai-copywriter-assistant">
-      <div className="flex items-center justify-between border-b border-line pb-4">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line pb-4">
         <div className="flex items-center gap-2.5">
           <div className="p-2 bg-brand/10 rounded-lg border border-brand/20">
             <Sparkles className="w-5 h-5 text-brand" />
           </div>
           <div>
-            <h3 className="font-display font-bold text-ink text-base">AI Personal Brand Writer</h3>
+            <h3 className="font-display font-bold text-ink text-base flex items-center gap-2">
+              <span>AI Personal Brand Writer</span>
+            </h3>
             <p className="text-xs text-muted">Optimize banner copy for any profession</p>
           </div>
         </div>

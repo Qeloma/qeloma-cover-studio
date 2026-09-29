@@ -577,9 +577,8 @@ export default function BannerCanvas({ config, className = "", onExportRef, embe
       ctx.drawImage(logoImg, WIDTH - lw - 24, 18, lw, lh);
     }
 
-    // Avatar zone geometry — shared by both the rendered headshot and the
-    // safe-zone guide so they always line up. Desktop: bottom-left, overlapping
-    // the banner's bottom edge (like LinkedIn). Mobile: higher and more inset.
+    // Avatar zone geometry for safe-zone guide.
+    // Desktop: bottom-left, overlapping the banner's bottom edge (like LinkedIn). Mobile: higher and more inset.
     let avatarCX = 190;
     let avatarCY = HEIGHT - 40; // most of the circle visible, still hugging the bottom edge
     let avatarR = 150;
@@ -589,40 +588,15 @@ export default function BannerCanvas({ config, className = "", onExportRef, embe
       avatarR = 125;
     }
 
-    // H. Profile avatar drawn into the avatar zone so the headshot actually
-    // renders on the banner (previously only the guide was drawn here).
-    const avatarImg = !skipImages && config.customAvatarUrl ? getLoadedImage(config.customAvatarUrl) : null;
-    if (avatarImg) {
-      ctx.save();
-      ctx.beginPath();
-      ctx.arc(avatarCX, avatarCY, avatarR, 0, Math.PI * 2);
-      ctx.closePath();
-      ctx.clip();
-      drawImageCover(ctx, avatarImg, avatarCX - avatarR, avatarCY - avatarR, avatarR * 2, avatarR * 2);
-      ctx.restore();
-
-      // Framing ring in the background color to mimic LinkedIn's avatar border.
-      ctx.beginPath();
-      ctx.arc(avatarCX, avatarCY, avatarR, 0, Math.PI * 2);
-      ctx.lineWidth = 8;
-      ctx.strokeStyle = primaryBg;
-      ctx.stroke();
-    }
-
     // 4. Draw Safe Zone overlay IF enabled AND NOT exporting!
-    // This highlights the circular area covered by LinkedIn profile picture.
-    // It's exceptionally useful so they don't overlay texts here.
+    // This highlights the circular area covered by LinkedIn profile picture on real profiles.
     if (config.showProfileSafeZone && !isExporting) {
       ctx.save();
 
-      // Skip the red fill when a headshot is present so it stays visible —
-      // just outline the zone. Otherwise show the full translucent backdrop.
-      if (!avatarImg) {
-        ctx.fillStyle = "rgba(239, 68, 68, 0.15)";
-        ctx.beginPath();
-        ctx.arc(avatarCX, avatarCY, avatarR, 0, Math.PI * 2);
-        ctx.fill();
-      }
+      ctx.fillStyle = "rgba(239, 68, 68, 0.12)";
+      ctx.beginPath();
+      ctx.arc(avatarCX, avatarCY, avatarR, 0, Math.PI * 2);
+      ctx.fill();
 
       ctx.strokeStyle = "#ef4444";
       ctx.lineWidth = 2.5;
@@ -631,15 +605,12 @@ export default function BannerCanvas({ config, className = "", onExportRef, embe
       ctx.arc(avatarCX, avatarCY, avatarR, 0, Math.PI * 2);
       ctx.stroke();
 
-      // Only label the zone when it isn't occupied by the headshot.
-      if (!avatarImg) {
-        ctx.fillStyle = "#ef4444";
-        ctx.setLineDash([]); // Reset dash
-        ctx.font = `bold 11px ${sansFamily}`;
-        ctx.textAlign = "center";
-        ctx.fillText("AVATAR OVERLAP", avatarCX, avatarCY - 10);
-        ctx.fillText("SAFE ZONE", avatarCX, avatarCY + 8);
-      }
+      ctx.fillStyle = "#ef4444";
+      ctx.setLineDash([]); // Reset dash
+      ctx.font = `bold 12px ${sansFamily}`;
+      ctx.textAlign = "center";
+      ctx.fillText("LINKEDIN AVATAR OVERLAP", avatarCX, avatarCY - 10);
+      ctx.fillText("SAFE ZONE", avatarCX, avatarCY + 8);
 
       ctx.restore();
     }
@@ -740,7 +711,7 @@ export default function BannerCanvas({ config, className = "", onExportRef, embe
     <div className={`relative ${className}`} id={embedded ? undefined : "canvas-container"}>
       {/* Container wrapper that maintains the exact 4:1 LinkedIn Aspect Ratio */}
       <div
-        className={`w-full aspect-[4/1] bg-slate-950 overflow-hidden ${
+        className={`w-full aspect-[4/1] bg-slate-950 overflow-hidden relative ${
           embedded ? "" : "rounded-xl shadow-2xl border border-line"
         }`}
       >

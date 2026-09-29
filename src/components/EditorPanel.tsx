@@ -118,6 +118,13 @@ export default function EditorPanel({ config, onChangeConfig }: EditorPanelProps
 
   return (
     <div className="bg-surface border border-line rounded-xl overflow-hidden shadow-sm transition-colors" id="editor-control-panel">
+      {/* Editor Header Bar */}
+      <div className="bg-raised/80 px-4 py-2 border-b border-line flex items-center justify-between gap-2">
+        <span className="text-xs font-mono font-bold text-muted uppercase tracking-wider flex items-center gap-1.5">
+          <span>Design Studio Controls</span>
+        </span>
+      </div>
+
       {/* Editor Tab Navigation */}
       <div className="flex border-b border-line bg-raised/60 p-1">
         {TABS.map(({ id, label, icon: Icon }) => (
@@ -482,12 +489,41 @@ export default function EditorPanel({ config, onChangeConfig }: EditorPanelProps
               </span>
             </p>
 
-            {/* Avatar URL */}
-            <div>
+            {/* Avatar URL & Presets */}
+            <div className="space-y-2">
               <label className={`${labelCls} flex items-center gap-1.5`}>
                 <UserCircle2 className="w-3.5 h-3.5 text-faint" />
-                Profile Avatar URL
+                Mockup Profile Avatar
               </label>
+              
+              <div className="flex flex-wrap gap-2 mb-2">
+                <button
+                  type="button"
+                  onClick={() => onChangeConfig({ customAvatarUrl: "" })}
+                  className={`px-2.5 py-1 rounded text-[10px] font-bold border transition-all cursor-pointer ${
+                    !config.customAvatarUrl
+                      ? "bg-brand/10 border-brand/30 text-brand"
+                      : "bg-app border-line text-muted hover:text-ink"
+                  }`}
+                >
+                  Generic Silhouette
+                </button>
+                <button
+                  type="button"
+                  onClick={() => onChangeConfig({ customAvatarUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80" })}
+                  className="px-2.5 py-1 rounded text-[10px] font-bold border bg-app border-line text-muted hover:text-ink transition-all cursor-pointer"
+                >
+                  Preset Headshot 1
+                </button>
+                <button
+                  type="button"
+                  onClick={() => onChangeConfig({ customAvatarUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80" })}
+                  className="px-2.5 py-1 rounded text-[10px] font-bold border bg-app border-line text-muted hover:text-ink transition-all cursor-pointer"
+                >
+                  Preset Headshot 2
+                </button>
+              </div>
+
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 rounded-full bg-app border border-line overflow-hidden shrink-0 flex items-center justify-center">
                   {config.customAvatarUrl ? (
@@ -504,7 +540,9 @@ export default function EditorPanel({ config, onChangeConfig }: EditorPanelProps
                   className={inputCls}
                 />
               </div>
-              <p className="text-[10px] text-faint mt-1">Shown in the LinkedIn preview mockup below.</p>
+              <p className="text-[10px] text-faint mt-1">
+                Used in the LinkedIn Profile Simulator below. LinkedIn automatically overlays your account profile picture on your actual profile, so your headshot will not be duplicated inside the cover image export.
+              </p>
             </div>
 
             {/* Logo URL */}

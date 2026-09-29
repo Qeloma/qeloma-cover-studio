@@ -5,6 +5,7 @@ import MockProfile from "./components/MockProfile";
 import EditorPanel from "./components/EditorPanel";
 import AIHelper from "./components/AIHelper";
 import AuthPanel from "./components/AuthPanel";
+import DriveModal from "./components/DriveModal";
 import QelomaMark from "./components/Logo";
 import {
   Download,
@@ -17,6 +18,7 @@ import {
   Laptop,
   Sun,
   Moon,
+  HardDrive
 } from "lucide-react";
 
 // Neutral, fictional demo avatar as an inline SVG data URI: no real person,
@@ -81,6 +83,7 @@ export default function App() {
   const [config, setConfig] = useState<BannerConfig>(DEFAULT_CONFIG);
 
   const [notification, setNotification] = useState<string | null>(null);
+  const [isDriveModalOpen, setIsDriveModalOpen] = useState<boolean>(false);
 
   // Initial value comes from the pre-paint bootstrap in index.html.
   const [theme, setTheme] = useState<Theme>(() =>
@@ -147,6 +150,14 @@ export default function App() {
         </div>
 
         <div className="flex items-center gap-2.5">
+          <button
+            onClick={() => setIsDriveModalOpen(true)}
+            className="px-3 py-1.5 rounded-lg border border-brand/30 bg-brand/10 hover:bg-brand/20 text-xs text-brand font-bold transition-all flex items-center gap-1.5 cursor-pointer shadow-sm"
+            title="Open Google Drive integration studio">
+            <HardDrive className="w-3.5 h-3.5" />
+            <span>Google Drive</span>
+          </button>
+
           <button
             onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
             className="p-2 rounded-lg border border-line hover:bg-raised text-muted hover:text-ink transition-all cursor-pointer"
@@ -229,6 +240,13 @@ export default function App() {
             {/* Embedded Action Bar */}
             <div className="absolute right-4 bottom-4 flex items-center gap-2.5">
               <button
+                onClick={() => setIsDriveModalOpen(true)}
+                className="px-4 py-2.5 bg-surface/90 backdrop-blur-md hover:bg-surface border border-line text-ink font-bold rounded-lg text-xs transition-all flex items-center gap-2 shadow-lg cursor-pointer">
+                <HardDrive className="w-4 h-4 text-brand" />
+                <span className="hidden sm:inline">Save to Google Drive</span>
+              </button>
+
+              <button
                 onClick={handleTriggerExport}
                 className="px-5 py-2.5 bg-brand hover:opacity-90 text-on-brand font-extrabold rounded-lg text-xs transition-all flex items-center gap-2 shadow-xl shadow-brand/20 cursor-pointer">
                 <Download className="w-4 h-4 stroke-[2.5]" />
@@ -249,9 +267,11 @@ export default function App() {
 
             {/* Profile Placement mockup simulator */}
             <div className="space-y-3">
-              <h3 className="text-xs font-bold text-muted uppercase tracking-widest flex items-center gap-2">
-                <Laptop className="w-4 h-4 text-brand" />
-                <span>Simulated LinkedIn Profile Preview</span>
+              <h3 className="text-xs font-bold text-muted uppercase tracking-widest flex items-center justify-between gap-2">
+                <div className="flex items-center gap-2">
+                  <Laptop className="w-4 h-4 text-brand" />
+                  <span>Simulated LinkedIn Profile Preview</span>
+                </div>
               </h3>
               <MockProfile config={config} />
             </div>
@@ -330,6 +350,21 @@ export default function App() {
           </div>
         </div>
       </footer>
+
+      {/* Google Drive Integration Modal */}
+      <DriveModal
+        isOpen={isDriveModalOpen}
+        onClose={() => setIsDriveModalOpen(false)}
+        config={config}
+        onLoadConfig={(newConfig) => {
+          setConfig(newConfig);
+          showToast("Loaded banner template from Google Drive!");
+        }}
+        getCanvasDataUrl={() => {
+          const canvas = document.querySelector("#banner-canvas-section canvas") as HTMLCanvasElement;
+          return canvas ? canvas.toDataURL("image/png") : null;
+        }}
+      />
     </div>
   );
 }
